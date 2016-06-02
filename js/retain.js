@@ -1,5 +1,5 @@
 $(function(){
-
+    // Model
     var model = {
         init: function() {
             if (!localStorage.notes) {
@@ -16,17 +16,20 @@ $(function(){
         }
     };
 
-
+    // Octopus handler
     var octopus = {
         addNewNote: function(noteStr) {
             model.add({
                 content: noteStr
+                // Add a date and time stamp
+                dateSubmitted: Date.now()
+
             });
             view.render();
         },
 
         getNotes: function() {
-            return model.getAllNotes();
+            return model.getAllNotes().reverse();
         },
 
         init: function() {
@@ -35,7 +38,7 @@ $(function(){
         }
     };
 
-
+    // View code
     var view = {
         init: function() {
             this.noteList = $('#notes');
@@ -52,12 +55,15 @@ $(function(){
             var htmlStr = '';
             octopus.getNotes().forEach(function(note){
                 htmlStr += '<li class="note">'+
+                        '<span class="note-date">' + new Date(note.dateSubmitted).toString() + '</span>' +
                         note.content +
                     '</li>';
+                    
             });
             this.noteList.html( htmlStr );
         }
     };
 
+    // Start the octopus
     octopus.init();
 });
